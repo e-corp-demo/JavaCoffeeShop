@@ -51,9 +51,8 @@ jobs:
         uses: mathiasconradt/sonarqube-sunshine/.github/actions/sonarqube-sunshine@main
         with:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
-          sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
-          component-key: ${{ secrets.COMPONENT_KEY }}
-          branch: ${{ secrets.BRANCH }}
+          sonar-host-url: ${{ vars.SONAR_HOST_URL }}
+          component-key: ${{ vars.COMPONENT_KEY }}
           enrich-cves: true
           deploy-to-pages: true
 
