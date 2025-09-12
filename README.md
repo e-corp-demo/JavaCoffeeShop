@@ -46,4 +46,3 @@ mvn spring-boot:run
 
 Before trying to exploit the application and/or fix vulnerabilities, play around in the app and make yourself familiar with the features.
 Essentially it is an application to order coffee's and beer's if you have an account.
-
