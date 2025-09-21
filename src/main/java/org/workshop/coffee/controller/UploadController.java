@@ -32,9 +32,18 @@ public class UploadController {
     @PostMapping("/uploadimage")
     public String uploadImage(Model model, @RequestParam("image") MultipartFile file, Principal principal) throws IOException {
 
-//        model.addAttribute("msg", "Uploaded images: " + name);
-//        getPerson(model, principal).setProfilePic(name);
-//        personService.savePerson(getPerson(model, principal));
+        // get the file and save it to the UPLOAD_DIRECTORY
+        var name = file.getOriginalFilename().replace(" ", "_");
+        var fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, name);
+        File directory = new File(UPLOAD_DIRECTORY);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+        Files.write(fileNameAndPath, file.getBytes());
+
+        model.addAttribute("msg", "Uploaded images: " + name);
+        getPerson(model, principal).setProfilePic(name);
+        personService.savePerson(getPerson(model, principal));
 
         return "person/upload";
     }
