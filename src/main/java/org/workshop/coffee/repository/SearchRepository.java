@@ -27,7 +27,6 @@ public class SearchRepository {
         var resultList = (List<Product>) query.getResultList();
         // return the result list
         return resultList;
-        New Code
         // return null;
     }
 
