@@ -26,5 +26,4 @@ public class SearchRepository {
         // get and return result list
         return query.getResultList();
     }
-
 }
