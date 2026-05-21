@@ -32,9 +32,26 @@ public class UploadController {
     @PostMapping("/uploadimage")
     public String uploadImage(Model model, @RequestParam("image") MultipartFile file, Principal principal) throws IOException {
 
-//        model.addAttribute("msg", "Uploaded images: " + name);
-//        getPerson(model, principal).setProfilePic(name);
-//        personService.savePerson(getPerson(model, principal));
+        // save the file to the UPLOAD_DIRECTORY
+        var originalName = file.getOriginalFilename();
+        if (originalName == null || originalName.isEmpty()) {
+            throw new IllegalArgumentException("Invalid file name");
+        }
+        // Strip path components to prevent directory traversal
+        var name = Paths.get(originalName).getFileName().toString().replace(" ", "_");
+        var fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, name);
+        if (!fileNameAndPath.normalize().startsWith(Paths.get(UPLOAD_DIRECTORY).normalize())) {
+            throw new IllegalArgumentException("Invalid file path");
+        }
+        File directory = new File(UPLOAD_DIRECTORY);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+        Files.write(fileNameAndPath, file.getBytes());
+
+        model.addAttribute("msg", "Uploaded images: " + name);
+        getPerson(model, principal).setProfilePic(name);
+        personService.savePerson(getPerson(model, principal));
 
         return "person/upload";
     }
