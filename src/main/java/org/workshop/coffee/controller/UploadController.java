@@ -33,8 +33,16 @@ public class UploadController {
     public String uploadImage(Model model, @RequestParam("image") MultipartFile file, Principal principal) throws IOException {
 
         // save the file to the UPLOAD_DIRECTORY
-        var name = file.getOriginalFilename().replace(" ", "_");
+        var originalName = file.getOriginalFilename();
+        if (originalName == null || originalName.isEmpty()) {
+            throw new IllegalArgumentException("Invalid file name");
+        }
+        // Strip path components to prevent directory traversal
+        var name = Paths.get(originalName).getFileName().toString().replace(" ", "_");
         var fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, name);
+        if (!fileNameAndPath.normalize().startsWith(Paths.get(UPLOAD_DIRECTORY).normalize())) {
+            throw new IllegalArgumentException("Invalid file path");
+        }
         File directory = new File(UPLOAD_DIRECTORY);
         if (!directory.exists()){
             directory.mkdir();
